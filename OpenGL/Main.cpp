@@ -33,7 +33,6 @@ glm::mat4 projection;
 // Textures
 Texture brickTexture;
 Texture dirtTexture;
-Texture heightmapTexture;
 
 // Heightmaps
 std::vector<float> heightmapVertices;
@@ -105,9 +104,6 @@ void loadTextures()
 
     dirtTexture = Texture((char*)"Textures/dirt.png");
     dirtTexture.LoadTexture();
-
-    heightmapTexture = Texture((char*)"Heightmaps/iceland_heightmap.png");
-    heightmapTexture.LoadTexture();
 }
 
 void generateHeightmapVertices()
@@ -470,13 +466,8 @@ void updateTransformations()
         }
 
         // Lighting and Texturing Logic
-        // Access heightmap
-        if (i == 0)
-        {
-            heightmapTexture.UseTexture();
-        }
         // Access first pyramid object
-        else if (i == 1)
+        if (i == 1)
         {
             shinyMaterial.UseMaterial(uniformSpecularIntensityList.at(i), uniformShininessList.at(i));
             brickTexture.UseTexture();

@@ -7,6 +7,7 @@ layout (location = 2) in vec3 norm;
 out vec4 vCol;
 out vec2 TexCoord;
 out vec3 Normal;
+out float Height;
 out vec3 FragPos;
 
 uniform mat4 model;
@@ -23,5 +24,7 @@ void main()
 	
 	Normal = mat3(transpose(inverse(model))) * norm;	
 	
+	Height = pos.y;
+
     	FragPos = (model * vec4(pos, 1.0)).xyz; 
 }

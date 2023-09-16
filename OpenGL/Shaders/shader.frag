@@ -3,6 +3,7 @@
 in vec4 vCol;
 in vec2 TexCoord;
 in vec3 Normal;
+in float Height;
 in vec3 FragPos;
 
 out vec4 colour;
@@ -51,6 +52,10 @@ void main()
 		}
 	}
 
-	colour =  texture(theTexture, TexCoord) * (ambientColour + diffuseColour + specularColour);
-	//colour =  vCol * (ambientColour + diffuseColour + specularColour);
+	float h = (Height + 16) / 32.0f;
+	vec4 greyScale = vec4(h, h, h, 1.0);
+
+	//colour = greyScale * texture(theTexture, TexCoord) * (ambientColour + diffuseColour + specularColour);
+	//colour = vCol * greyScale * (ambientColour + diffuseColour + specularColour);
+	colour = greyScale * (ambientColour + diffuseColour + specularColour);
 }
