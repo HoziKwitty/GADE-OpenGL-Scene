@@ -10,6 +10,11 @@ Camera::Camera()
 
 Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed)
 {
+	currentTime = 0.0f;
+	deltaTime = 0.0f;
+	lastTime = 0.0f;
+	totalTime = 0.0f;
+
 	pos1 = glm::vec3(3.0f, 3.0f, 5.0f);
 	pos2 = glm::vec3(2.0f, 5.0f, -2.0f);
 	pos3 = glm::vec3(-4.0f, 4.0f, 3.0f);
@@ -32,7 +37,7 @@ glm::vec3 Camera::getCameraPosition()
 	return position;
 }
 
-void Camera::keyControl(bool* keys, GLfloat deltaTime)
+void Camera::keyControl(bool* keys, GLfloat inDeltaTime)
 {
 	// Toggle between static and free-look
 	if (keys[GLFW_KEY_TAB])
@@ -44,21 +49,28 @@ void Camera::keyControl(bool* keys, GLfloat deltaTime)
 	// Camera is in static mode
 	if (isStatic)
 	{
-		if (keys[GLFW_KEY_LEFT])
+		currentTime = glfwGetTime();
+		deltaTime = currentTime - lastTime;
+		lastTime = currentTime;
+		totalTime += deltaTime;
+
+		if (keys[GLFW_KEY_LEFT] && totalTime >= 0.5f)
 		{
-			std::cout << "Pressed: " << GLFW_KEY_LEFT << std::endl;
+			totalTime = 0.0f;
+
 			changePosition(true);
 		}
-		else if (keys[GLFW_KEY_RIGHT])
+		else if (keys[GLFW_KEY_RIGHT] && totalTime >= 0.5f)
 		{
-			std::cout << "Pressed: " << GLFW_KEY_RIGHT << std::endl;
+			totalTime = 0.0f;
+
 			changePosition(false);
 		}
 	}
 	// Camera is in free-look mode
 	else
 	{
-		GLfloat velocity = moveSpeed * deltaTime;
+		GLfloat velocity = moveSpeed * inDeltaTime;
 
 		if (keys[GLFW_KEY_W])
 		{
@@ -112,33 +124,33 @@ void Camera::changePosition(bool isLeft)
 	// Cycle to the left
 	if (isLeft)
 	{
-		if (equals(position, pos1)) {
-			std::cout << "Previous position: " << position.x << "; " << position.y << "; " << position.z << std::endl;
-			position == pos3;
-			std::cout << "Current position: " << position.x << "; " << position.y << "; " << position.z << std::endl;
+		if (equals(position, pos1))
+		{
+			position = pos3;
 		}
 		else if (equals(position, pos2))
 		{
-			position == pos1;
+			position = pos1;
 		}
 		else if (equals(position, pos3))
 		{
-			position == pos2;
+			position = pos2;
 		}
 	}
 	// Cycle to the right
 	else
 	{
-		if (equals(position, pos1)) {
-			position == pos2;
+		if (equals(position, pos1))
+		{
+			position = pos2;
 		}
 		else if (equals(position, pos2))
 		{
-			position == pos3;
+			position = pos3;
 		}
 		else if (equals(position, pos3))
 		{
-			position == pos1;
+			position = pos1;
 		}
 	}
 }

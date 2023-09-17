@@ -72,10 +72,10 @@ float minSize = 0.1f;
 // Models
 std::vector<Mesh*> meshList;
 std::vector<glm::mat4> modelList;
-std::vector<GLuint> uniformProjectionList;
 std::vector<GLuint> uniformModelList;
-std::vector<GLuint> uniformViewList;
-std::vector<GLuint> uniformEyePositionList;
+GLuint uniformProjection;
+GLuint uniformView;
+GLuint uniformEyePosition;
 std::vector<GLuint> uniformAmbientIntensityList;
 std::vector<GLuint> uniformAmbientColourList;
 std::vector<GLuint> uniformDirectionList;
@@ -337,10 +337,11 @@ void initialiseUniforms()
 {
     for (size_t i = 0; i < modelList.size(); i++)
     {
-        uniformProjectionList.push_back(0);
         uniformModelList.push_back(0);
-        uniformViewList.push_back(0);
-        uniformEyePositionList.push_back(0);
+        uniformProjection = 0;
+        uniformView = 0;
+        uniformEyePosition = 0;
+
         uniformAmbientIntensityList.push_back(0);
         uniformAmbientColourList.push_back(0);
         uniformDirectionList.push_back(0);
@@ -355,20 +356,20 @@ void setUniforms()
     for (size_t i = 0; i < uniformModelList.size(); i++)
     {
         uniformModelList.at(i) = shaderList[0]->getModelLocation();
-        uniformProjectionList.at(i) = shaderList[0]->getProjectionLocation();
-        uniformViewList.at(i) = shaderList[0]->getViewLocation();
+        uniformProjection = shaderList[0]->getProjectionLocation();
+        uniformView = shaderList[0]->getViewLocation();
+
         uniformAmbientColourList.at(i) = shaderList[0]->getAmbientColourLocation();
         uniformAmbientIntensityList.at(i) = shaderList[0]->getAmbientIntensityLocation();
         uniformDirectionList.at(i) = shaderList[0]->getDirectionLocation();
         uniformDiffuseIntensityList.at(i) = shaderList[0]->getDiffuseIntensityLocation();
-        uniformEyePositionList.at(i) = shaderList[0]->getEyePositionLocation();
+
+        uniformEyePosition = shaderList[0]->getEyePositionLocation();
+
         uniformSpecularIntensityList.at(i) = shaderList[0]->getSpecularIntensityLocation();
         uniformShininessList.at(i) = shaderList[0]->getShininessLocation();
 
         glUniformMatrix4fv(uniformModelList.at(i), 1, GL_FALSE, glm::value_ptr(modelList.at(i)));
-        glUniformMatrix4fv(uniformProjectionList.at(i), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(uniformViewList.at(i), 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
-        glUniform3f(uniformEyePositionList.at(i), camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
     }
 }
 
@@ -493,7 +494,7 @@ void updateTransformations()
         // Render normal meshes
         else
         {
-            //meshList[i]->renderMesh();
+            meshList[i]->renderMesh();
         }
     }
 }
@@ -579,12 +580,19 @@ int main(void)
         #pragma region Update Model Transformations
         setUniforms();
 
+        // Projection
+        glUniformMatrix4fv(uniformProjection, 1, GL_FALSE, glm::value_ptr(projection));
+
+        // View
+        glUniformMatrix4fv(uniformView, 1, GL_FALSE, glm::value_ptr(camera.calculateViewMatrix()));
+
+        // Eye position
+        glUniform3f(uniformEyePosition, camera.getCameraPosition().x, camera.getCameraPosition().y, camera.getCameraPosition().z);
+
         mainLight.UseLight(uniformAmbientIntensityList.at(0), uniformAmbientColourList.at(0),
             uniformDiffuseIntensityList.at(0), uniformDirectionList.at(0));
 
         initialiseModelPositions();
-
-        //readKeyboardInputs(mainWindow.getWindow(), position, rotation, scale);
 
         updateTransformations();
         #pragma endregion

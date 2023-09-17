@@ -16,7 +16,7 @@ public:
 
 	Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed);
 
-	void keyControl(bool* keys, GLfloat deltaTime);
+	void keyControl(bool* keys, GLfloat inDeltaTime);
 	void mouseControl(GLfloat xChange, GLfloat yChange);
 	void changePosition(bool isLeft);
 
@@ -44,6 +44,11 @@ private:
 	glm::vec3 pos2;
 	glm::vec3 pos3;
 	bool isStatic;
+
+	GLfloat currentTime;
+	GLfloat deltaTime;
+	GLfloat lastTime;
+	GLfloat totalTime;
 
 	void update();
 };
