@@ -20,7 +20,7 @@ class Window
 
 		bool getShouldClose() { return glfwWindowShouldClose(mainWindow); }
 
-		bool* getsKeys() { return keys; }
+		bool* getKeys() { return keys; }
 		GLfloat getXChange();
 		GLfloat getYChange();
 

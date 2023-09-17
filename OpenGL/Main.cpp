@@ -153,7 +153,7 @@ void generateHeightMapIndices()
 void createHeightMap()
 {
     // Load heightmap from memory
-    heightmapData = stbi_load("Heightmaps/iceland_heightmap.png", &width, &height, &nChannels, 0);
+    heightmapData = stbi_load("Heightmaps/custom_heightmap_2.png", &width, &height, &nChannels, 0);
 
     // Check if the heightmap has loaded correctly
     if (heightmapData)
@@ -504,11 +504,10 @@ int main(void)
     mainWindow.initialise();
 
     createHeightMap();
-
     createObjects();
     createShaders();
 
-    camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 30.0f, 0.5f);
+    camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 15.0f, 0.25f);
 
     loadTextures();
 
@@ -531,7 +530,7 @@ int main(void)
         glfwPollEvents();
 
         // Get input for camera
-        camera.keyControl(mainWindow.getsKeys(), deltaTime);
+        camera.keyControl(mainWindow.getKeys(), deltaTime);
         camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
 
         #pragma region Movement Logic
@@ -585,7 +584,7 @@ int main(void)
 
         initialiseModelPositions();
 
-        readKeyboardInputs(mainWindow.getWindow(), position, rotation, scale);
+        //readKeyboardInputs(mainWindow.getWindow(), position, rotation, scale);
 
         updateTransformations();
         #pragma endregion

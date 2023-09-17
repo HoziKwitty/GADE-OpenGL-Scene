@@ -69,11 +69,11 @@ void Mesh::createMeshFromHeightmap(std::vector<float> vertices, std::vector<unsi
 	glEnableVertexAttribArray(0);
 
 	// Texture
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 3, (void*)0 /*(void*)(sizeof(vertices[0]) * 3)*/);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 3, (void*)0);
 	glEnableVertexAttribArray(1);
 
 	//Light
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 3, (void*)0 /*(void*)(sizeof(vertices[0]) * 3)*/);
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 3, (void*)0);
 	glEnableVertexAttribArray(2);
 }
 
@@ -83,7 +83,6 @@ void Mesh::renderMesh()
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 	glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, 0);
-	//glDrawElements(GL_QUADS, indexCount, GL_UNSIGNED_INT, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	glBindVertexArray(0);
@@ -93,6 +92,7 @@ void Mesh::renderMeshFromHeightmap(int numStrips, int numVertsPerStrip)
 {
 	glBindVertexArray(VAO);
 
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
 	for (unsigned int strip = 0; strip < numStrips; strip++)
 	{
 		glDrawElements(
@@ -102,6 +102,9 @@ void Mesh::renderMeshFromHeightmap(int numStrips, int numVertsPerStrip)
 			(void*)(sizeof(unsigned int) * numVertsPerStrip * strip)
 		);
 	}
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0);
 }
 
 void Mesh::clearMesh()
