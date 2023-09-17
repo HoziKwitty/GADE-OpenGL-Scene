@@ -1,5 +1,4 @@
 #include <string>
-#include <iostream>
 #include <vector>
 
 #include "Camera.h"
@@ -20,11 +19,13 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLf
 	pos3 = glm::vec3(-4.0f, 4.0f, 3.0f);
 	isStatic = false;
 	
-	position = startPosition;
+	//position = startPosition;
+	position = pos1;
 	worldUp = startUp;
 	yaw = startYaw;
 	pitch = startPitch;
 	front = glm::vec3(0.0f, 0.0f, -1.0f);
+	worldOrigin = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	moveSpeed = startMoveSpeed;
 	turnSpeed = startTurnSpeed;
@@ -39,12 +40,24 @@ glm::vec3 Camera::getCameraPosition()
 
 void Camera::keyControl(bool* keys, GLfloat inDeltaTime)
 {
-	// Toggle between static and free-look
-	if (keys[GLFW_KEY_TAB])
-	{
-		isStatic = !isStatic;
-		position = pos1;
-	}
+	#pragma region CODE FOR PART 2 -- PLEASE IGNORE
+	// V V V V V V V V
+	//// Toggle between static and free-look
+	//currentTime = glfwGetTime();
+	//deltaTime = currentTime - lastTime;
+	//lastTime = currentTime;
+	//totalTime += deltaTime;
+
+	//if (keys[GLFW_KEY_TAB] && totalTime >= 0.25f)
+	//{
+	//	totalTime = 0.0f;
+
+	//	isStatic = !isStatic;
+	//	position = pos1;
+	//}
+	#pragma endregion
+
+	isStatic = true;
 
 	// Camera is in static mode
 	if (isStatic)
@@ -54,13 +67,13 @@ void Camera::keyControl(bool* keys, GLfloat inDeltaTime)
 		lastTime = currentTime;
 		totalTime += deltaTime;
 
-		if (keys[GLFW_KEY_LEFT] && totalTime >= 0.5f)
+		if (keys[GLFW_KEY_LEFT] && totalTime >= 0.25f)
 		{
 			totalTime = 0.0f;
 
 			changePosition(true);
 		}
-		else if (keys[GLFW_KEY_RIGHT] && totalTime >= 0.5f)
+		else if (keys[GLFW_KEY_RIGHT] && totalTime >= 0.25f)
 		{
 			totalTime = 0.0f;
 
@@ -171,7 +184,7 @@ bool Camera::equals(glm::vec3 v1, glm::vec3 v2)
 
 glm::mat4 Camera::calculateViewMatrix()
 {
-	return glm::lookAt(position, position + front, up);
+	return glm::lookAt(position, worldOrigin, up);
 }
 
 void Camera::update()

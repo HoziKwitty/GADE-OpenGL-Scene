@@ -10,8 +10,6 @@
 class Camera
 {
 public:
-	/*bool isStatic;*/
-
 	Camera();
 
 	Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLfloat startPitch, GLfloat startMoveSpeed, GLfloat startTurnSpeed);
@@ -33,6 +31,7 @@ private:
 	glm::vec3 up;
 	glm::vec3 right;
 	glm::vec3 worldUp;
+	glm::vec3 worldOrigin;
 
 	GLfloat yaw;
 	GLfloat pitch;
