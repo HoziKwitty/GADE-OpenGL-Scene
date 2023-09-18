@@ -93,7 +93,7 @@ void Mesh::renderMeshFromHeightmap(int numStrips, int numVertsPerStrip)
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IBO);
-	for (unsigned int strip = 0; strip < numStrips; strip++)
+	for (unsigned int strip = 0; strip < numStrips - 1; strip++)
 	{
 		glDrawElements(
 			GL_TRIANGLE_STRIP,

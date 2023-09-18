@@ -138,9 +138,9 @@ void generateHeightmapVertices()
 
 void generateHeightMapIndices()
 {
-    for (unsigned int i = 0; i < height - 1; i++)
+    for (unsigned int i = 0; i < height; i++)
     {
-        for (unsigned int j = 0; j < width - 1; j++)
+        for (unsigned int j = 0; j < width; j++)
         {
             for (unsigned int k = 0; k < 2; k++)
             {
@@ -238,7 +238,7 @@ void createSpecifiedObject(int type, GLfloat vertices[], unsigned int indices[],
 
 void createObjects()
 {
-    #pragma region Indices Matrices
+    #pragma region Model Indices
     unsigned int indices[] =
     {
         0, 3, 1,
@@ -494,7 +494,7 @@ void updateTransformations()
         // Render normal meshes
         else
         {
-            meshList[i]->renderMesh();
+            //meshList[i]->renderMesh();
         }
     }
 }
@@ -515,8 +515,9 @@ int main(void)
     shinyMaterial = Material(1.0f, 32);
     dullMaterial = Material(0.3f, 4);
 
+    // Ambient lighting so the models can be seen
                      /* r     g      b    aI    x     y     z     dI */
-    mainLight = Light(0.5f, 0.75f, 1.0f, 0.2f, 3.0f, 3.0f, 6.0f, 0.75f);
+    mainLight = Light(0.5f, 0.5f, 0.5f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
 
     projection = glm::perspective(glm::radians(45.0f), mainWindow.getBufferWidth() / mainWindow.getBufferHeight(), 0.1f, 100.0f);
 

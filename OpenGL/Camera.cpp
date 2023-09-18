@@ -41,23 +41,22 @@ glm::vec3 Camera::getCameraPosition()
 void Camera::keyControl(bool* keys, GLfloat inDeltaTime)
 {
 	#pragma region CODE FOR PART 2 -- PLEASE IGNORE
-	// V V V V V V V V
-	//// Toggle between static and free-look
-	//currentTime = glfwGetTime();
-	//deltaTime = currentTime - lastTime;
-	//lastTime = currentTime;
-	//totalTime += deltaTime;
+	// Toggle between static and free-look
+	currentTime = glfwGetTime();
+	deltaTime = currentTime - lastTime;
+	lastTime = currentTime;
+	totalTime += deltaTime;
 
-	//if (keys[GLFW_KEY_TAB] && totalTime >= 0.25f)
-	//{
-	//	totalTime = 0.0f;
+	if (keys[GLFW_KEY_TAB] && totalTime >= 0.25f)
+	{
+		totalTime = 0.0f;
 
-	//	isStatic = !isStatic;
-	//	position = pos1;
-	//}
+		isStatic = !isStatic;
+		position = pos1;
+	}
 	#pragma endregion
 
-	isStatic = true;
+	//isStatic = true;
 
 	// Camera is in static mode
 	if (isStatic)
@@ -184,7 +183,14 @@ bool Camera::equals(glm::vec3 v1, glm::vec3 v2)
 
 glm::mat4 Camera::calculateViewMatrix()
 {
-	return glm::lookAt(position, worldOrigin, up);
+	if (isStatic)
+	{
+		return glm::lookAt(position, worldOrigin, up);
+	}
+	else
+	{
+		return glm::lookAt(position, position + front, up);
+	}
 }
 
 void Camera::update()
