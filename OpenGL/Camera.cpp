@@ -14,9 +14,9 @@ Camera::Camera(glm::vec3 startPosition, glm::vec3 startUp, GLfloat startYaw, GLf
 	lastTime = 0.0f;
 	totalTime = 0.0f;
 
-	pos1 = glm::vec3(3.0f, 3.0f, 5.0f);
-	pos2 = glm::vec3(2.0f, 5.0f, -2.0f);
-	pos3 = glm::vec3(-4.0f, 4.0f, 3.0f);
+	pos1 = glm::vec3(0.0f, 5.0f, 4.0f);
+	pos2 = glm::vec3(-4.0f, 5.0f, -4.0f);
+	pos3 = glm::vec3(4.0f, 5.0f, 4.0f);
 	isStatic = false;
 	
 	//position = startPosition;
@@ -185,11 +185,11 @@ glm::mat4 Camera::calculateViewMatrix()
 {
 	if (isStatic)
 	{
-		return glm::lookAt(position, worldOrigin, up);
+		return glm::lookAt(position, worldOrigin, worldUp);
 	}
 	else
 	{
-		return glm::lookAt(position, position + front, up);
+		return glm::lookAt(position, position + front, worldUp);
 	}
 }
 

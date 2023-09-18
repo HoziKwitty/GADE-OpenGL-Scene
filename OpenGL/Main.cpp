@@ -5,10 +5,6 @@
 #include <cmath>
 #include <vector>
 
-#include <iostream>
-#include <cstdlib>
-#include <ctime>
-
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
@@ -112,7 +108,7 @@ void loadTextures()
 
 void generateHeightmapVertices()
 {
-    float yScale = 64.0f / 256.0f;
+    float yScale = 0.25f;
     float yShift = 16.0f;
 
     // Loop through the heightmap's texels
@@ -128,7 +124,7 @@ void generateHeightmapVertices()
 
             // Store transformed values for x, y, and z
             heightmapVertices.push_back(-height / 2.0f + height * i / (float)height);
-            heightmapVertices.push_back((int)y * yScale - yShift);
+            heightmapVertices.push_back(y * yScale - yShift);
             heightmapVertices.push_back(-width / 2.0f + width * j / (float)width);
         }
     }
@@ -140,7 +136,7 @@ void generateHeightmapVertices()
     stbi_image_free(heightmapData);
 }
 
-void generateHeightMapIndices()
+void generateHeightmapIndices()
 {
     for (unsigned int i = 0; i < height; i++)
     {
@@ -171,7 +167,7 @@ void createHeightMap()
 
     // Initialise all necessary heightmap details
     generateHeightmapVertices();
-    generateHeightMapIndices();
+    generateHeightmapIndices();
 
     // Create heightmap mesh
     Mesh* heightmapMesh = new Mesh();
@@ -240,68 +236,9 @@ void createSpecifiedObject(int type, GLfloat vertices[], unsigned int indices[],
     modelList.push_back(model);
 }
 
-////////////////////////////////////////
-
-// Shader source code for vertex and fragment shaders (checkerboard pattern)
-const char* vertexShaderSource = R"(
-    #version 330 core
-    layout (location = 0) in vec3 aPos;
-    out vec3 color;
-    uniform mat4 model;
-    uniform mat4 view;
-    uniform mat4 projection;
-    void main()
-    {
-        gl_Position = projection * view * model * vec4(aPos, 1.0);
-        color = aPos; // Pass vertex position as color
-    })";
-
-const char* fragmentShaderSource = R"(
-    #version 330 core
-    in vec3 color;
-    out vec4 FragColor;
-    void main()
-    {
-        FragColor = vec4(color, 1.0);
-    })";
-
-// Global variables for VAO, VBO, and shader program
-GLuint VAO, VBO, shaderProgram;
-///////////////////////////////////////^^^^^^^^^
-
-/// </summary>
 void createObjects()
 {
     #pragma region Model Indices
-    //////////////////////////////////////////////////////
-    // Define cube vertices (scaled to 1 unit)
-    GLfloat cubeVertices[] = 
-    {   // Vertex positions
-        -0.5f, -0.5f, -0.5f,
-         0.5f, -0.5f, -0.5f,
-         0.5f,  0.5f, -0.5f,
-        -0.5f,  0.5f, -0.5f,
-
-        -0.5f, -0.5f,  0.5f,
-         0.5f, -0.5f,  0.5f,
-         0.5f,  0.5f,  0.5f,
-        -0.5f,  0.5f,  0.5f
-    };
-
-    // Create VAO and VBO for the cube
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindVertexArray(VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW);
-
-    // Specify vertex attribute pointers
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (void*)0);
-    glEnableVertexAttribArray(0);
-    ////////////////////////////////////////////^^^^^^^^^^^^^^^^^^^^^^
-    #pragma region Indices Matrices
-
     unsigned int indices[] =
     {
         0, 3, 1,
@@ -349,7 +286,7 @@ void createObjects()
         1.0f, -1.0f, 0.0f,      1.0f, 0.0f,     0.0f, 0.0f, 0.0f,
         0.0f, 1.0f, 0.0f,       0.5f, 1.0f,     0.0f, 0.0f, 0.0f
     };
-    
+
     // Points that make up the first cube
     GLfloat vertices2[] =
     {
@@ -394,45 +331,8 @@ void createShaders()
     Shader* shader = new Shader();
     shader->CreateFromFiles(vShader, fShader);
     shaderList.push_back(shader);
-    //////////////////////////////////////////////////////////
-    // Compile and link shaders
-    GLuint vertexShader, fragmentShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-    glCompileShader(vertexShader);
-
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, nullptr);
-    glCompileShader(fragmentShader);
-
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-    //////////////////////////////////////////^^^^^^^^^^^^^^^^^^^^^
 }
 
-//////////////////////////////////////////////////
-// Function to create a colored cube at a given position
-void createColoredCube(float x, float y, float z, glm::vec3 color) {
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(x, y, z)); // Set cube position
-    model = glm::scale(model, glm::vec3(1.0f)); // Scale the cube to 1 unit
-
-    GLuint modelLoc = glGetUniformLocation(shaderProgram, "model");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
-    GLuint colorLoc = glGetUniformLocation(shaderProgram, "color");
-    glUniform3fv(colorLoc, 1, glm::value_ptr(color));
-
-    glBindVertexArray(VAO);
-    glDrawArrays(GL_TRIANGLES, 0, 36); // Draw the cube
-}
-//////////////////////////////////////////^^^^^^^^^^^^
-/// </summary>
 void initialiseUniforms()
 {
     for (size_t i = 0; i < modelList.size(); i++)
@@ -548,24 +448,12 @@ int main(void)
 {
     mainWindow = Window(screenWidth, screenHeight);
     mainWindow.initialise();
-    
-    /////////////////////////////////////////////////////////
-    // Initialize GLEW
-    if (glewInit() != GLEW_OK) {
-        std::cerr << "Failed to initialize GLEW" << std::endl;
-        return -1;
-    }
-    /////////////////////////////////////^^^^^^^^^^^^^^^
 
     createHeightMap();
     createObjects();
     createShaders();
 
     camera = Camera(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), -90.0f, 0.0f, 15.0f, 0.25f);
-    ///////////////////////
-    glm::mat4 view = camera.calculateViewMatrix();
-    ////////////////////^^^^^^
-
 
     loadTextures();
 
@@ -587,7 +475,7 @@ int main(void)
         lastTime = now;
 
         glfwPollEvents();
-        
+
         // Get input for camera
         camera.keyControl(mainWindow.getKeys(), deltaTime);
         camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
@@ -621,57 +509,6 @@ int main(void)
 
         mainWindow.swapBuffers();
     }
-    // Print the other rows of the view matrix as well
-    glUseProgram(shaderProgram);
-
-    // Loop to create the chessboard of cubes
-    srand(time(nullptr)); // Seed the random number generator
-
-    float squareSize = 1.0f; // Size of each square
-    float borderWidth = 0.5f; // Border width
-    float boardHeight = 0.5f; // Chess board height
-    float yOffset = 0.1f; // Maximum random offset for squares
-
-    // Define colors for black and white squares
-    glm::vec3 whiteColor(1.0f, 1.0f, 1.0f);
-    glm::vec3 blackColor(0.0f, 0.0f, 0.0f);
-    glm::vec3 borderColor(0.2f, 0.2f, 0.2f); // Border color
-
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            float x = i - 4.5f; // Adjust for centering the grid
-            float y = j - 4.5f; // Adjust for centering the grid
-            float z = -boardHeight / 2.0f; // Start at the bottom of the chess board
-
-            // Determine cube color based on the chessboard pattern
-            glm::vec3 color;
-            if ((i + j) % 2 == 0) {
-                color = whiteColor; // White square
-                std::cout << "Cube at (" << x << ", " << y << ", " << z << ") is white." << std::endl;
-            }
-            else {
-                color = blackColor; // Black square
-                std::cout << "Cube at (" << x << ", " << y << ", " << z << ") is black." << std::endl;
-            }
-
-            // Apply a border around the chessboard
-            if (i < 1 || i > 6 || j < 1 || j > 6) {
-                color = borderColor; // Border color
-            }
-
-            // Add random offset to raise individual squares
-            float yOffsetRandom = (rand() % 100) / 100.0f * yOffset;
-            z += yOffsetRandom;
-
-            createColoredCube(x * squareSize, y * squareSize, z, color); // Create a cube at the specified position
-
-        }
-    }
-
-    // Cleanup and exit
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteProgram(shaderProgram);
 
     return 0;
 }
