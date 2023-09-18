@@ -395,61 +395,6 @@ void initialiseModelPositions()
     }
 }
 
-void readKeyboardInputs(GLFWwindow* window, glm::vec3& position, glm::vec3& rotation, glm::vec3& scale)
-{
-    // Translate
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        position.y += 0.001f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        position.y -= 0.001f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        position.x -= 0.001f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        position.x += 0.001f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS) {
-        position.z -= 0.001f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS) {
-        position.z += 0.001f;
-    }
-
-    // Rotation
-    else if (glfwGetKey(window, GLFW_KEY_I) == GLFW_PRESS) {
-        rotation.x -= 0.025f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS) {
-        rotation.x += 0.025f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS) {
-        rotation.y -= 0.025f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_L) == GLFW_PRESS) {
-        rotation.y += 0.025f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_U) == GLFW_PRESS) {
-        rotation.z += 0.025f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_O) == GLFW_PRESS) {
-        rotation.z -= 0.025f;
-    }
-
-    // Scaling
-    else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
-        scale.x += 0.0005f;
-        scale.y += 0.0005f;
-        scale.z += 0.0005f;
-    }
-    else if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
-        scale.x -= 0.0005f;
-        scale.y -= 0.0005f;
-        scale.z -= 0.0005f;
-    }
-}
-
 void updateTransformations()
 {
     // Loop through all existing models
@@ -534,44 +479,6 @@ int main(void)
         // Get input for camera
         camera.keyControl(mainWindow.getKeys(), deltaTime);
         camera.mouseControl(mainWindow.getXChange(), mainWindow.getYChange());
-
-        #pragma region Movement Logic
-        if (direction)
-        {
-            triOffset += triIncrement;
-
-        }
-        else
-        {
-            triOffset -= triIncrement;
-        }
-
-        if (abs(triOffset) >= triMaxOffset)
-        {
-            direction = !direction;
-        }
-
-        curAngle += 0.01f;
-
-        if (curAngle >= 360)
-        {
-            curAngle -= 360;
-        }
-
-        if (sizeDirection)
-        {
-            currSize += 0.0001f;
-        }
-        else
-        {
-            currSize -= 0.0001f;
-        }
-
-        if (currSize >= maxSize || currSize <= minSize)
-        {
-            sizeDirection = !sizeDirection;
-        }
-        #pragma endregion
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -8,4 +8,8 @@ REFERENCES:
 	SonarSystems. 2015. OpenGL-Tutorials/Drawing A Triangle - GL_TRIANGLES. [Online]. Source Code. Available at: https://github.com/SonarSystems/OpenGL-Tutorials/tree/master/Drawing%20A%20Triangle%20-%20GL_TRIANGLES. [Accessed 16 August 2023].
 	OpenGL Tutorial 16 - GLFW Key Input. 2015. YouTube video, added by SonarSystems. [Online]. Available at: https://www.youtube.com/watch?v=L2aiuDDFNIk. [Accessed 16 August 2023].
 
+	LearnOpenGL. [s.a.]. Camera, [Online]. Available at: https://learnopengl.com/Getting-started/Camera [Accessed 16 September 2023].
+
+	Paone, J. 2021. Tessellation Chapter I: Rendering Terrain using Height Maps. [Online]. Available at: https://learnopengl.com/Guest-Articles/2021/Tessellation/Height-map [Accessed 17 September 2023].
+
 */

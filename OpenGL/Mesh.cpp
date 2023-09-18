@@ -72,7 +72,7 @@ void Mesh::createMeshFromHeightmap(std::vector<float> vertices, std::vector<unsi
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 3, (void*)0);
 	glEnableVertexAttribArray(1);
 
-	//Light
+	// Light
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(vertices[0]) * 3, (void*)0);
 	glEnableVertexAttribArray(2);
 }
